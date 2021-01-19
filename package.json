@@ -2,10 +2,11 @@
   "name": "@nayaya25/express-boilerplate",
   "version": "1.0.0",
   "description": "A simple Express App Starter",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": "./index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nayaya25/express-boilerplate.git"
@@ -20,5 +21,9 @@
   "bugs": {
     "url": "https://github.com/nayaya25/express-boilerplate/issues"
   },
-  "homepage": "https://github.com/nayaya25/express-boilerplate#readme"
+  "homepage": "https://github.com/nayaya25/express-boilerplate#readme",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "yargs": "^16.2.0"
+  }
 }

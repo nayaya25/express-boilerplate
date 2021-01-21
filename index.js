@@ -3,28 +3,39 @@
 const yargs = require("yargs");
 const chalk = require("chalk");
 const fs = require("fs");
-const util = require("util");
+
+const log = console.log;
+chalk.BackgroundColor = "bgGray";
+const error = chalk.bold.red;
+const warning = chalk.keyword("orange");
+const info = chalk.bold("cyan");
+const success = chalk.green;
+
 const folders = ["controllers", "models", "routes", "middlewares", "helpers"];
 const createFolders = (root) => {
   if (fs.existsSync(`./${root}`)) {
-    console.log(
-      `Project Exists with Name: ${root}. Kindly change or rename the folder`
+    log(
+      warning(
+        `Project Exists with Name: ${root}. Kindly change or rename the folder`
+      )
     );
     return;
   } else {
     fs.mkdirSync(`./${root}`, (err) => {
-      if (err) console.log(`Couldnt Create Project folder: ${folder}`);
-      console.log(`Project Folder ${folder}: created`);
+      err
+        ? log(error(`Couldnt Create Project folder: ${folder}`))
+        : log(success(`Project Folder ${folder}: created`));
     });
   }
 
   folders.map((folder) => {
     if (fs.existsSync(`./${root}/${folder}`)) {
-      console.log(`${folder} exists already`);
+      log(warning(`${folder} exists already`));
     } else {
       fs.mkdirSync(`./${root}/${folder}`, (err) => {
-        if (err) console.log(`Couldnt Create ${folder}`);
-        console.log(`${folder}: created`);
+        err
+          ? log(error(`Couldnt Create ${folder}`))
+          : log(success(`${folder}: created`));
       });
     }
   });
@@ -42,22 +53,24 @@ const createFiles = (root) => {
 
   folders.map((folder) => {
     if (fs.existsSync(`./${root}/${folder}/index.js`)) {
-      console.log(`${folder} exists already`);
+      log(warning(`${folder} exists already`));
     } else {
       fs.writeFile(`./${root}/${folder}/index.js`, "", (err) => {
-        if (err) console.log(`Couldnt Create ${folder} Index File`);
-        console.log(`${folder}: Index file created`);
+        err
+          ? log(error(`Couldnt Create ${folder} Index File`))
+          : log(success(`${folder}: Index file created`));
       });
     }
   });
 
   fileNames.map((fileName) => {
     if (fs.existsSync(`./${root}/${fileName}`)) {
-      console.log(`${fileName}: already Exists`);
+      log(warning(`${fileName}: already Exists`));
     } else {
       fs.writeFile(`./${root}/${fileName}`, "", (err) => {
-        if (err) console.log(`Couldnt Create ${fileName} File`);
-        console.log(`${fileName}: created`);
+        err
+          ? log(error(`Couldnt Create ${fileName} File`))
+          : log(success(`${fileName}: created`));
       });
     }
   });
@@ -66,12 +79,12 @@ const createFiles = (root) => {
 const createProject = (name) => {
   try {
     createFolders(name);
-    console.log("Folders are created.");
+    log(info("All Folders created."));
     createFiles(name);
-    console.log("Files are created.");
+    log(info("All Files created."));
   } catch (e) {
-    console.log(e);
-    console.log("Error Creating Project Folder");
+    log(error(e));
+    log(info("Error Creating Project Folder"));
   }
 };
 

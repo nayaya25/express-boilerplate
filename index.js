@@ -3,25 +3,34 @@
 const yargs = require("yargs");
 const chalk = require("chalk");
 const fs = require("fs");
+const { exec } = require("child_process");
+
+const { loader, gitignore, package, eslint, server } = require("./config");
 
 const log = console.log;
-chalk.BackgroundColor = "bgGray";
+
 const error = chalk.bold.red;
 const warning = chalk.keyword("orange");
-const info = chalk.bold("cyan");
+const info = chalk.bold.blue;
 const success = chalk.green;
 
 const folders = ["controllers", "models", "routes", "middlewares", "helpers"];
-const createFolders = (root) => {
-  if (fs.existsSync(`./${root}`)) {
+
+yargs.version = "1.0.1";
+const { name } = yargs.argv;
+
+const createFolders = () => {
+  if (fs.existsSync(`./${name}`)) {
     log(
       warning(
-        `Project Exists with Name: ${root}. Kindly change or rename the folder`
+        `Project Exists with Name: ${info(
+          name
+        )}. Kindly change or rename the folder`
       )
     );
     return;
   } else {
-    fs.mkdirSync(`./${root}`, (err) => {
+    fs.mkdirSync(`./${name}`, (err) => {
       err
         ? log(error(`Couldnt Create Project folder: ${folder}`))
         : log(success(`Project Folder ${folder}: created`));
@@ -29,19 +38,21 @@ const createFolders = (root) => {
   }
 
   folders.map((folder) => {
-    if (fs.existsSync(`./${root}/${folder}`)) {
+    if (fs.existsSync(`./${name}/${folder}`)) {
       log(warning(`${folder} exists already`));
     } else {
-      fs.mkdirSync(`./${root}/${folder}`, (err) => {
+      fs.mkdirSync(`./${name}/${folder}`, (err) => {
         err
           ? log(error(`Couldnt Create ${folder}`))
           : log(success(`${folder}: created`));
       });
     }
   });
+  log(success("Folders created."));
+  createFiles(name);
 };
 
-const createFiles = (root) => {
+const createFiles = () => {
   const fileNames = [
     ".env",
     ".eslintrc.json",
@@ -52,10 +63,10 @@ const createFiles = (root) => {
   ];
 
   folders.map((folder) => {
-    if (fs.existsSync(`./${root}/${folder}/index.js`)) {
+    if (fs.existsSync(`./${name}/${folder}/index.js`)) {
       log(warning(`${folder} exists already`));
     } else {
-      fs.writeFile(`./${root}/${folder}/index.js`, "", (err) => {
+      fs.writeFile(`./${name}/${folder}/index.js`, "", (err) => {
         err
           ? log(error(`Couldnt Create ${folder} Index File`))
           : log(success(`${folder}: Index file created`));
@@ -64,32 +75,76 @@ const createFiles = (root) => {
   });
 
   fileNames.map((fileName) => {
-    if (fs.existsSync(`./${root}/${fileName}`)) {
+    if (fs.existsSync(`./${name}/${fileName}`)) {
       log(warning(`${fileName}: already Exists`));
     } else {
-      fs.writeFile(`./${root}/${fileName}`, "", (err) => {
-        err
-          ? log(error(`Couldnt Create ${fileName} File`))
-          : log(success(`${fileName}: created`));
-      });
+      switch (fileName) {
+        case "package.json":
+          fs.writeFile(
+            `./${name}/package.json`,
+            JSON.stringify(package, null, 4),
+            function (err) {
+              if (err) return console.log(err);
+            }
+          );
+          break;
+        case ".eslintrc.json":
+          fs.writeFile(
+            `./${name}/.eslintrc.json`,
+            JSON.stringify(eslint, null, 4),
+            function (err) {
+              if (err) return console.log(err);
+            }
+          );
+          break;
+        case ".gitignore":
+          fs.writeFile(`./${name}/.gitignore`, gitignore, function (err) {
+            if (err) return console.log(err);
+          });
+          break;
+        case "index.js":
+          fs.writeFile(`./${name}/index.js`, server, function (err) {
+            if (err) return console.log(err);
+          });
+          break;
+        case "loader.js":
+          fs.writeFile(`./${name}/loader.js`, loader, function (err) {
+            if (err) return console.log(err);
+          });
+          break;
+        default:
+          fs.writeFile(`./${name}/${fileName}`, "", (err) => {
+            err
+              ? log(error(`Couldnt Create ${fileName} File`))
+              : log(success(`${fileName}: created`));
+          });
+          break;
+      }
     }
   });
+  log(success("Files: created."));
 };
+
+// const runNpm = () => {
+//   exec(`cd ${name} && npm install && npm run dev`, (err, stdout, stder) => {
+//     if (err) return error("Failed to Execute Command");
+//     if (stdout) return error("Packages Being Installed", stdout);
+//     if (stder)
+//       return error("Failed to Install Packages: Try it manually", stdout);
+//   });
+// };
 
 const createProject = (name) => {
   try {
     createFolders(name);
-    log(info("All Folders created."));
     createFiles(name);
-    log(info("All Files created."));
+    log(runNpm());
   } catch (e) {
     log(error(e));
-    log(info("Error Creating Project Folder"));
+    log(info("Error Creating Project"));
   }
 };
 
-yargs.version = "1.0.1";
-const { name } = yargs.argv;
 yargs.command({
   command: "start",
   describe: "This Command create a simple Express App Boilerplate",

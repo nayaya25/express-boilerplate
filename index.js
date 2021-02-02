@@ -105,9 +105,13 @@ const createFiles = () => {
           );
           break;
         case ".eslintrc.json":
-          fs.writeFile(`./${name}/.eslintrc.json`, JSON.stringify(eslint, null, 4),, function (err) {
-            if (err) return console.log(err);
-          });
+          fs.writeFile(
+            `./${name}/.eslintrc.json`,
+            JSON.stringify(eslint, null, 4),
+            function (err) {
+              if (err) return console.log(err);
+            }
+          );
           break;
         case ".gitignore":
           fs.writeFile(`./${name}/.gitignore`, gitignore, function (err) {

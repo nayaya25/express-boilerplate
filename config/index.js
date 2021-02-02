@@ -84,6 +84,12 @@ module.exports.package = {
   },
 };
 
+module.exports.route = `const express = require("express");
+const router = express.Router();
+
+module.exports = router;
+`;
+
 module.exports.server = `const app = require("./loader");
 const PORT = 3001;
 app.listen(PORT, () => {

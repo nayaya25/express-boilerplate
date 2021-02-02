@@ -3,9 +3,15 @@
 const yargs = require("yargs");
 const chalk = require("chalk");
 const fs = require("fs");
-const { exec } = require("child_process");
 
-const { loader, gitignore, package, eslint, server } = require("./config");
+const {
+  loader,
+  gitignore,
+  package,
+  eslint,
+  server,
+  route,
+} = require("./config");
 
 const log = console.log;
 
@@ -71,6 +77,16 @@ const createFiles = () => {
           ? log(error(`Couldnt Create ${folder} Index File`))
           : log(success(`${folder}: Index file created`));
       });
+
+      if (`./${name}/${folder}/index.js` === `./${name}/routes/index.js`) {
+        fs.writeFile(
+          `./${name}/${folder}/index.js`,
+          JSON.stringify(package, null, 4),
+          function (err) {
+            if (err) return console.log(err);
+          }
+        );
+      }
     }
   });
 
@@ -89,13 +105,9 @@ const createFiles = () => {
           );
           break;
         case ".eslintrc.json":
-          fs.writeFile(
-            `./${name}/.eslintrc.json`,
-            JSON.stringify(eslint, null, 4),
-            function (err) {
-              if (err) return console.log(err);
-            }
-          );
+          fs.writeFile(`./${name}/.eslintrc.json`, route, function (err) {
+            if (err) return console.log(err);
+          });
           break;
         case ".gitignore":
           fs.writeFile(`./${name}/.gitignore`, gitignore, function (err) {
@@ -138,7 +150,6 @@ const createProject = (name) => {
   try {
     createFolders(name);
     createFiles(name);
-    log(runNpm());
   } catch (e) {
     log(error(e));
     log(info("Error Creating Project"));

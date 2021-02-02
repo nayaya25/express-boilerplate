@@ -1,5 +1,5 @@
 {
-  "name": "express-boilerplate",
+  "name": "node-express-starter",
   "version": "1.0.0",
   "description": "A simple Express App Starter",
   "main": "index.js",

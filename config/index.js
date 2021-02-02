@@ -87,6 +87,10 @@ module.exports.package = {
 module.exports.route = `const express = require("express");
 const router = express.Router();
 
+router.get("/", (req, res) => {
+  console.log("Welcome to the minimalistic Express API starter");
+});
+
 module.exports = router;
 `;
 

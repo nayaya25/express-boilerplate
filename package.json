@@ -1,5 +1,5 @@
 {
-  "name": "@nayaya25/express-boilerplate",
+  "name": "express-boilerplate",
   "version": "1.0.0",
   "description": "A simple Express App Starter",
   "main": "index.js",

@@ -135,16 +135,15 @@ const createFiles = () => {
     }
   });
   log(success("Files: created."));
+  log(
+    info(`THE PROJECT IS BOOSTRAPPED. TO GET STARTED: 
+  RUN
+  cd ${name}
+  npm install
+  npm run dev
+              `)
+  );
 };
-
-// const runNpm = () => {
-//   exec(`cd ${name} && npm install && npm run dev`, (err, stdout, stder) => {
-//     if (err) return error("Failed to Execute Command");
-//     if (stdout) return error("Packages Being Installed", stdout);
-//     if (stder)
-//       return error("Failed to Install Packages: Try it manually", stdout);
-//   });
-// };
 
 const createProject = (name) => {
   try {

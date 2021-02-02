@@ -79,13 +79,9 @@ const createFiles = () => {
       });
 
       if (`./${name}/${folder}/index.js` === `./${name}/routes/index.js`) {
-        fs.writeFile(
-          `./${name}/${folder}/index.js`,
-          JSON.stringify(route, null, 4),
-          function (err) {
-            if (err) return console.log(err);
-          }
-        );
+        fs.writeFile(`./${name}/${folder}/index.js`, route, function (err) {
+          if (err) return console.log(err);
+        });
       }
     }
   });
